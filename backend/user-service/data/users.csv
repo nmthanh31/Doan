@@ -1,0 +1,6 @@
+id,full_name,email,password,phone,address,created_at
+1,Alice Nguyen,alice@example.com,123456,0987654321,123 Trần Phú,2024-01-10
+2,Bob Tran,bob@example.com,abc123,0977888999,45 Lý Thường Kiệt,2024-02-05
+3,Charlie Le,charlie@example.com,pass789,0911223344,78 Hai Bà Trưng,2024-03-20
+4,Nguyen Manh Thanh,NTT2003K53@gmail.com,pass789,0911223344,78 Hai Bà Trưng,2024-03-20
+5,Nguyễn Mạnh Thành,admin@localhost.com,12345678,0359113298,123HANOI,2025-04-16
