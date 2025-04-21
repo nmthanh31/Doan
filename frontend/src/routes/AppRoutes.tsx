@@ -4,6 +4,7 @@ import LoginPage from "../pages/Login";
 import SignUpPage from "../pages/SignUp";
 import PrivateRoute from "./PrivateRoute";
 import OrderPage from "../pages/OrderPage";
+import SuccessPage from "../pages/SuccessPage";
 
 const AppRoutes = () => {
   const routes = useRoutes([
@@ -22,6 +23,14 @@ const AppRoutes = () => {
       element: (
         <PrivateRoute>
           <OrderPage />
+        </PrivateRoute>
+      ),
+    },
+    {
+      path: "/payment/success/:order_id",
+      element: (
+        <PrivateRoute>
+          <SuccessPage />
         </PrivateRoute>
       ),
     },

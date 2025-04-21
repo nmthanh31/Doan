@@ -17,8 +17,6 @@ import { Delete, ShoppingCart, History } from "@mui/icons-material";
 import { Product } from "../interfaces/ProductProps";
 import { CartItem, Order } from "../interfaces/OrderProps";
 
-
-
 const OrderPage: React.FC = () => {
   const [tabValue, setTabValue] = useState<number>(0);
   const [itemsInCart, setItemsInCart] = useState<CartItem[]>([]);
@@ -45,7 +43,9 @@ const OrderPage: React.FC = () => {
 
     const fetchProducts = async () => {
       try {
-        const response = await axios.get<Product[]>("http://localhost:3002/api/products/");
+        const response = await axios.get<Product[]>(
+          "http://localhost:3002/api/products/"
+        );
 
         console.log(response.data);
 
@@ -66,43 +66,74 @@ const OrderPage: React.FC = () => {
     setTabValue(newValue);
   };
 
-  const removeFromCart = async (id: number) => {
-    await axios.delete(`/order-items/${id}`);
-    setItemsInCart(itemsInCart.filter((item) => item.id !== id));
-  };
+  const removeFromCart = async (orderId: string, productId: string) => {
+    const response = await axios.delete(
+      `http://localhost:3003/api/orders/item/delete-item`,
+      {
+        data: {
+          order_id: orderId,
+          product_id: productId,
+        },
+      }
+    );
 
-  const updateQuantity = async (id: number, newQuantity: number) => {
-    if (newQuantity < 1) return;
-    await axios.patch(`/order-items/${id}`, { quantity: newQuantity });
-    setItemsInCart(
-      itemsInCart.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
+    console.log(response.data.message);
+    console.log(response.data.id);
+
+    setItemsInCart((prevItems) =>
+      prevItems.filter((item) => item.id !== response.data.id)
     );
   };
 
-  const checkout = async () => {
-    if (!cartOrder) return;
+  const updateQuantity = async (
+    orderId: string,
+    productId: string,
+    quantity: number
+  ) => {
+    const response = await axios.patch(
+      "http://localhost:3003/api/orders/item/update-quantity",
+      {
+        order_id: orderId,
+        product_id: productId,
+        quantity: quantity,
+      }
+    );
+    console.log(response.data.message);
+    if (response.data.message == "delete") {
+      console.log(response.data.id);
+      setItemsInCart((prevItems) =>
+        prevItems.filter((item) => item.id !== response.data.id)
+      );
+    } else if (response.data.message == "update") {
+      setItemsInCart(
+        itemsInCart.map((item) =>
+          item.id == response.data.id ? response.data.item : item
+        )
+      );
+    }
+  };
 
-    await axios.patch(`/orders/${cartOrder.id}`, {
-      status: "completed",
-      total: calculateCartTotal(),
-    });
+  const checkout = async (amount: number) => {
+    try {
+      const res = await axios.post("http://localhost:3004/api/payment", {
+        amount: amount,
+        order_id: cartOrder?.id,
+      });
 
-    setOrders([
-      { ...cartOrder, status: "completed", total: calculateCartTotal() },
-      ...orders,
-    ]);
-    setItemsInCart([]);
-    setCartOrder(null);
-    setTabValue(1);
+      const payUrl = res.data.data.payUrl;
+      console.log("Payment URL:", payUrl);
+
+      window.location.href = payUrl;
+    } catch (error) {
+      console.error("Payment failed", error);
+    }
   };
 
   const calculateCartTotal = () => {
-    return itemsInCart.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
+    return itemsInCart.reduce((total, item) => {
+      const product = findProductById(item.product_id);
+      return total + (product ? product.price * item.quantity : 0);
+    }, 0);
   };
 
   return (
@@ -143,56 +174,71 @@ const OrderPage: React.FC = () => {
               ) : (
                 <>
                   <List>
-                    {itemsInCart.map((item) => (
-                      <React.Fragment key={item.id}>
-                        <ListItem
-                          secondaryAction={
-                            <IconButton
-                              edge="end"
-                              aria-label="delete"
-                              onClick={() => removeFromCart(item.id)}
-                            >
-                              <Delete />
-                            </IconButton>
-                          }
-                        >
-                          <ListItemText
-                            primary={findProductById(item.product_id)?.name}
-                            secondary={`${item.price.toLocaleString()}đ x ${
-                              item.quantity
-                            }`}
-                          />
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              ml: 2,
-                            }}
+                    {itemsInCart.map((item) => {
+                      return (
+                        <React.Fragment key={item.id}>
+                          <ListItem
+                            secondaryAction={
+                              <IconButton
+                                edge="end"
+                                aria-label="delete"
+                                onClick={() =>
+                                  removeFromCart(
+                                    cartOrder?.id.toString(),
+                                    item.product_id.toString()
+                                  )
+                                }
+                              >
+                                <Delete />
+                              </IconButton>
+                            }
                           >
-                            <Button
-                              size="small"
-                              onClick={() =>
-                                updateQuantity(item.id, item.quantity - 1)
-                              }
+                            <ListItemText
+                              primary={findProductById(item.product_id)?.name}
+                              secondary={`${item.price.toLocaleString()}đ x ${
+                                item.quantity
+                              }`}
+                            />
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                ml: 2,
+                              }}
                             >
-                              -
-                            </Button>
-                            <Typography sx={{ mx: 1 }}>
-                              {item.quantity}
-                            </Typography>
-                            <Button
-                              size="small"
-                              onClick={() =>
-                                updateQuantity(item.id, item.quantity + 1)
-                              }
-                            >
-                              +
-                            </Button>
-                          </Box>
-                        </ListItem>
-                        <Divider />
-                      </React.Fragment>
-                    ))}
+                              <Button
+                                size="small"
+                                onClick={() =>
+                                  updateQuantity(
+                                    cartOrder?.id.toString(),
+                                    item.product_id.toString(),
+                                    -1
+                                  )
+                                }
+                              >
+                                -
+                              </Button>
+                              <Typography sx={{ mx: 1 }}>
+                                {item.quantity}
+                              </Typography>
+                              <Button
+                                size="small"
+                                onClick={() =>
+                                  updateQuantity(
+                                    cartOrder?.id.toString(),
+                                    item.product_id.toString(),
+                                    1
+                                  )
+                                }
+                              >
+                                +
+                              </Button>
+                            </Box>
+                          </ListItem>
+                          <Divider />
+                        </React.Fragment>
+                      );
+                    })}
                   </List>
 
                   <Box
@@ -208,7 +254,7 @@ const OrderPage: React.FC = () => {
                     <Button
                       variant="contained"
                       color="primary"
-                      onClick={checkout}
+                      onClick={() => checkout(calculateCartTotal())}
                     >
                       Thanh toán
                     </Button>

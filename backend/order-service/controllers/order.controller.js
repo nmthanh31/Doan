@@ -27,51 +27,38 @@ exports.addItemToOrder = (req, res) => {
   res.status(201);
 };
 
-// ✅ Tạo mới đơn hàng (status mặc định: incart)
-// exports.createOrder = (req, res) => {
-//   const { user_id, total } = req.body;
+exports.updateQuanity = (req, res) => {
+  const { order_id, product_id, quantity } = req.body;
+  try {
+    const updatedItem = orderService.updateQuantity(
+      order_id,
+      product_id,
+      quantity
+    );
+    res.json(updatedItem);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
 
-//   try {
-//     const newOrder = orderService.createOrder(user_id, total);
-//     res.status(201).json(newOrder);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
+exports.removeItemFromOrder = (req, res) => {
+  const { order_id, product_id } = req.body;
 
-// // ✅ Thêm sản phẩm vào đơn hàng
-// exports.addItemToOrder = (req, res) => {
-//   const { order_id } = req.params;
-//   const { product_id } = req.body;
+  try {
+    const result = orderService.removeItemFromOrder(order_id, product_id);
+    res.json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
 
-//   try {
-//     const newItem = orderService.addItemToOrder(order_id, product_id);
-//     res.status(201).json(newItem);
-//   } catch (err) {
-//     res.status(400).json({ error: err.message });
-//   }
-// };
+exports.updateStatus = (req, res) => {
+  const { order_id } = req.body;
 
-// // ✅ Cập nhật trạng thái đơn hàng
-// exports.updateOrderStatus = (req, res) => {
-//   const { order_id } = req.params;
-//   const { status } = req.body;
-
-//   try {
-//     const updatedOrder = orderService.updateOrderStatus(order_id, status);
-//     res.json(updatedOrder);
-//   } catch (error) {
-//     res.status(404).json({ message: error.message });
-//   }
-// };
-
-// exports.removeItemFromOrder = (req, res) => {
-//   const { order_id, product_id } = req.params;
-
-//   try {
-//     orderService.removeItemFromOrder(order_id, product_id);
-//     res.status(200).json({ message: "Item removed successfully" });
-//   } catch (err) {
-//     res.status(400).json({ error: err.message });
-//   }
-// };
+  try {
+    const result = orderService.updateStatus(order_id);
+    res.json(result);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};

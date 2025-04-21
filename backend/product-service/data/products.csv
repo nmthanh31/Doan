@@ -1,6 +1,6 @@
 id,name,description,price,quantity,category,image_url,rating,brand,created_at
-1,T-shirt,Comfortable cotton T-shirt with classic fit,20.00,100,Clothing,T-shirt.png,4.5,Uniqlo,2024-03-10
-2,Jean,Denim jeans with modern slim fit,40.00,50,Clothing,jean.png,4.3,Levi's,2024-03-11
-3,Shirt,Casual button-up shirt with stripe pattern,30.00,75,Clothing,shirt.png,4.6,Zara,2024-03-12
-4,Short,Cotton shorts perfect for summer,25.00,60,Clothing,short.png,4.2,Nike,2024-03-13
-5,Polo,Slim-fit polo shirt with collar,28.00,80,Clothing,polo.png,4.7,Adidas,2024-03-14
+1,T-shirt,Comfortable cotton T-shirt with classic fit,2000,100,Clothing,T-shirt.png,4.5,Uniqlo,2024-03-10
+2,Jean,Denim jeans with modern slim fit,4000,50,Clothing,jean.png,4.3,Levi's,2024-03-11
+3,Shirt,Casual button-up shirt with stripe pattern,3000,75,Clothing,shirt.png,4.6,Zara,2024-03-12
+4,Short,Cotton shorts perfect for summer,2500,60,Clothing,short.png,4.2,Nike,2024-03-13
+5,Polo,Slim-fit polo shirt with collar,2800,80,Clothing,polo.png,4.7,Adidas,2024-03-14
