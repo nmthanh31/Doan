@@ -53,7 +53,7 @@ const SignUpPage = () => {
           phone: "",
           address: "",
         });
-        navifate("/login"); // Chuyển hướng đến trang đăng nhập sau khi đăng ký thành công
+        navifate("/login"); 
       } else {
         alert("Đăng ký thất bại.");
       }

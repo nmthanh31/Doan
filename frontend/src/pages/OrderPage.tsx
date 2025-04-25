@@ -26,7 +26,6 @@ const OrderPage: React.FC = () => {
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
-    console.log("User ID from localStorage:", userId); // Thêm dòng này
 
     axios.get(`http://localhost:3003/api/orders/user/${userId}`).then((res) => {
       const userOrders = res.data as Order[];

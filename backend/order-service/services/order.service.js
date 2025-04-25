@@ -9,13 +9,12 @@ const generateId = (list) => {
     : 1;
 };
 
-// ✅ Lấy tất cả các đơn hàng của user
 exports.getOrderByUserID = (user_id) => {
   const orders = readCSV(fileOrderPath);
   return orders.filter((order) => order.user_id === user_id);
 };
 
-// ✅ Lấy tất cả item trong 1 đơn hàng
+
 exports.getItemsInOrder = (order_id) => {
   const items = readCSV(fileItemPath);
   return items.filter((item) => item.order_id === order_id);
@@ -37,7 +36,6 @@ exports.updateQuantity = (order_id, product_id, quantity = 1) => {
     };
   }
 
-  // console.log(orders[orderIndex]);
 
   const items = readCSV(fileItemPath);
   let itemId;
@@ -65,14 +63,10 @@ exports.updateQuantity = (order_id, product_id, quantity = 1) => {
     isDone = true;
   }
 
-  // console.log("item quantity", items[itemIndex].quantity);
-  // console.log("order total", orders[orderIndex].total);
-
   writeCSV(fileItemPath, items);
   orders[orderIndex].total = this.calculateTotal(order_id);
   writeCSV(fileOrderPath, orders);
 
-  // console.log("new order total", orders[orderIndex].total);
 
   if (isDone) {
     return {
@@ -87,7 +81,6 @@ exports.updateQuantity = (order_id, product_id, quantity = 1) => {
   };
 };
 
-// Thêm đơn hàng vào giỏ hàng
 exports.addItemToOrder = (user_id, product_id, product_price) => {
   const orders = readCSV(fileOrderPath);
   let order_id = -1;
@@ -116,7 +109,6 @@ exports.addItemToOrder = (user_id, product_id, product_price) => {
   console.log("order old total", orders[orderIndex].total);
 
   const items = readCSV(fileItemPath);
-  // console.log("product_id", product_id, "order_id", order_id);
 
   let itemIndex = -1;
   for (let i = 0; i < items.length; i++) {
@@ -132,7 +124,6 @@ exports.addItemToOrder = (user_id, product_id, product_price) => {
     orders[orderIndex].total =
       parseInt(orders[orderIndex].total) + parseInt(product_price);
     writeCSV(fileOrderPath, orders);
-    // console.log("newItem price", newItem.price);
 
     console.log("new order total", orders[orderIndex].total);
     return items[itemIndex];

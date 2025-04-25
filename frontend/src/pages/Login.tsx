@@ -12,18 +12,17 @@ const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { login, user } = useAuth(); // Giả sử bạn đã có hook useAuth để lấy hàm login
+  const { login } = useAuth(); 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  }; // Thêm navigate vào dependencies
+  }; 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); // Đang gửi yêu cầu
+    setIsLoading(true); 
 
     try {
-      // Gửi yêu cầu đăng nhập tới backend
-      axios.defaults.withCredentials = true; // Đảm bảo gửi cookie cùng với yêu cầu
+      axios.defaults.withCredentials = true;
 
       const response = await axios.post(
         "http://localhost:3001/api/users/login",
@@ -32,28 +31,24 @@ const LoginPage = () => {
           password: formData.password,
         },
         {
-          withCredentials: true, // 💡 Quan trọng để session hoạt động
+          withCredentials: true, 
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
 
-      console.log(response);
-
-      // Kiểm tra nếu đăng nhập thành công
       if (response.data.user) {
         login(response.data.user, response.data.token);
       } else {
         setErrorMessage("Đăng nhập không thành công. Vui lòng kiểm tra lại.");
       }
     } catch (error: any) {
-      // Xử lý lỗi khi gửi yêu cầu (lỗi server, hoặc sai thông tin đăng nhập)
       setErrorMessage(
         error.response?.data?.message || "Đã xảy ra lỗi, vui lòng thử lại!"
       );
     } finally {
-      setIsLoading(false); // Dừng trạng thái loading
+      setIsLoading(false);
     }
   };
 
@@ -122,7 +117,7 @@ const LoginPage = () => {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-white"
-                tabIndex={-1} // không focus vào nút này khi tab
+                tabIndex={-1} 
               >
                 {showPassword ? (
                   <EyeSlashIcon className="h-5 w-5" />

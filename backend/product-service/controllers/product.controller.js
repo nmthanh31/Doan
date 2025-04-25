@@ -18,7 +18,6 @@ exports.getImage = (req, res) => {
   const imageName = req.params.imageName;
   const imagePath = path.join(__dirname, "../data/static/", imageName);
 
-  // Kiểm tra nếu file tồn tại
   fs.access(imagePath, fs.constants.F_OK, (err) => {
     if (err) {
       return res.status(404).send("Image not found");

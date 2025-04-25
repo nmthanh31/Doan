@@ -10,7 +10,7 @@ const CardProduct: React.FC<CardProductProps> = ({
   onAddToCart,
   discount,
 }) => {
-  const fixedRating = parseFloat(Number(rating).toFixed(1)); // Ensure rating is between 0 and 5
+  const fixedRating = parseFloat(Number(rating).toFixed(1)); 
 
   const renderRatingStars = () => {
     const fullStars = Math.floor(fixedRating);
@@ -19,7 +19,6 @@ const CardProduct: React.FC<CardProductProps> = ({
 
     return (
       <>
-        {/* Full stars */}
         {Array(fullStars)
           .fill(0)
           .map((_, i) => (
@@ -29,7 +28,6 @@ const CardProduct: React.FC<CardProductProps> = ({
             />
           ))}
 
-        {/* Half star */}
         {hasHalfStar && (
           <div className="relative w-4 h-4">
             <StarIcon className="absolute text-gray-300 fill-current" />
@@ -40,7 +38,6 @@ const CardProduct: React.FC<CardProductProps> = ({
           </div>
         )}
 
-        {/* Empty stars */}
         {Array(emptyStars)
           .fill(0)
           .map((_, i) => (
@@ -66,7 +63,6 @@ const CardProduct: React.FC<CardProductProps> = ({
         )}
       </div>
 
-      {/* Product Info */}
       <div className="p-4 flex flex-col justify-between h-[120px]">
         <div>
           <h2 className="text-lg font-semibold text-gray-900 truncate">

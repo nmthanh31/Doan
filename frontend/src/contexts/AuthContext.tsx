@@ -26,7 +26,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const navigate = useNavigate();
 
   const login = (userData: User, token: string) => {
-    console.log("Saving token to localStorage:", token); // Thêm dòng này
+    console.log("Saving token to localStorage:", token); 
     localStorage.setItem("token", token);
     localStorage.setItem("userId", userData.id);
     setUser(userData);
@@ -42,10 +42,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    // console.log("Token from localStorage:", token); // Thêm dòng này
 
     if (!token) {
-      console.warn("⚠️ Không tìm thấy token!");
+      console.warn("Không tìm thấy token!");
     }
 
     if (token) {
@@ -56,14 +55,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           },
         })
         .then((res) => {
-          // console.log("✅ User loaded from token:", res.data);
           localStorage.setItem("userId", res.data.user.id);
           setUser(res.data.user as User);
-          // navigate("/products");
         })
         .catch((err) => {
           console.error(
-            "❌ Failed to load user from token:",
+            "Failed to load user from token:",
             err.response?.data || err
           );
           setUser(null);

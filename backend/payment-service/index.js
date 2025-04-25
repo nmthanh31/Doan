@@ -5,9 +5,9 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // Hoặc "*" nếu muốn mở hoàn toàn
+    origin: "http://localhost:5173", 
     methods: "GET,POST,PUT,DELETE,PATCH",
-    credentials: true, // Cho phép gửi cookie/session
+    credentials: true, 
   })
 );
 
@@ -50,14 +50,13 @@ app.post("/api/payment", async (req, res) => {
     requestId +
     "&requestType=" +
     requestType;
-  //signature
+
   const crypto = require("crypto");
   var signature = crypto
     .createHmac("sha256", secretKey)
     .update(rawSignature)
     .digest("hex");
 
-  //json object send to MoMo endpoint
   const requestBody = JSON.stringify({
     partnerCode: partnerCode,
     partnerName: "Test",

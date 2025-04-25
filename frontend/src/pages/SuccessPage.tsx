@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // dùng useParams
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const SuccessPage = () => {
-  const { order_id } = useParams(); // Lấy order_id từ URL path
+  const { order_id } = useParams(); 
   const orderId = order_id;
   const navigate = useNavigate();
 
@@ -20,7 +20,7 @@ const SuccessPage = () => {
         if (res.data.message === "updated") {
           setTimeout(() => {
             navigate("/products");
-          }, 3000); // sửa thành 3000 ms = 3 giây nếu bạn muốn quay lại nhanh
+          }, 3000); 
         }
       } catch (err) {
         console.error("Failed to update order status:", err);
