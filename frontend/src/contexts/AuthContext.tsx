@@ -1,15 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-type User = {
-  id: string;
-  email: string;
-  full_name: string;
-  phone: string;
-  address: string;
-  created_at: string;
-};
+import { User } from "../interfaces/UserProps";
 
 type AuthContextType = {
   user: User | null;
@@ -26,7 +18,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const navigate = useNavigate();
 
   const login = (userData: User, token: string) => {
-    console.log("Saving token to localStorage:", token); 
+    console.log("Saving token to localStorage:", token);
     localStorage.setItem("token", token);
     localStorage.setItem("userId", userData.id);
     setUser(userData);
@@ -55,8 +47,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           },
         })
         .then((res) => {
-          localStorage.setItem("userId", res.data.user.id);
-          setUser(res.data.user as User);
+          const userData = res.data as { user: User };
+          localStorage.setItem("userId", userData.user.id);
+          setUser(userData.user);
         })
         .catch((err) => {
           console.error(

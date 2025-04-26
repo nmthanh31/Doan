@@ -10,7 +10,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // Hoặc "*" nếu muốn mở hoàn toàn
+    origin: "http://localhost", // Hoặc "*" nếu muốn mở hoàn toàn
     methods: 'GET,POST,PUT,DELETE',
     credentials: true, // Cho phép gửi cookie/session
   })

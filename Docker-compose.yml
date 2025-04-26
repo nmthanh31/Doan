@@ -1,0 +1,46 @@
+services:
+  user-service:
+    build: ./backend/user-service
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend/user-service/data:/app/data
+    restart: always
+
+  product-service:
+    build: ./backend/product-service
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./backend/product-service/data:/app/data
+    restart: always
+
+  order-service:
+    build: ./backend/order-service
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./backend/order-service/data:/app/data
+    restart: always
+
+  payment-service:
+    build: ./backend/payment-service
+    ports:
+      - "3004:3004"
+    restart: always
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      - user-service
+      - product-service
+      - order-service
+      - payment-service
+
+volumes:
+  user-service-data:
+  product-service-data:
+  order-service-data:
