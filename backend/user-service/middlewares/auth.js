@@ -1,7 +1,6 @@
+const { jwt } = require("jsonwebtoken");
 
-import jwt from "jsonwebtoken";
-
-export const verifyToken = (req, res, next) => {
+exports.verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -20,17 +19,16 @@ export const verifyToken = (req, res, next) => {
   });
 };
 
-
-export const authenticateUser = (req, res, next) => {
+exports.authenticateUser = (req, res, next) => {
   const token = req.headers.authorization;
 
   if (!token) {
-    return res.status(401).json({ error: 'Authentication token not provided' });
+    return res.status(401).json({ error: "Authentication token not provided" });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
-      return res.status(401).json({ error: 'Invalid authentication token' });
+      return res.status(401).json({ error: "Invalid authentication token" });
     }
 
     // Add the decoded user information to the request object

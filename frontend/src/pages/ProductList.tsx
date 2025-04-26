@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { Product } from "../interfaces/ProductProps";
 import CardProduct from "../components/CardProduct";
 import { useAuth } from "../contexts/AuthContext";
-import { CartItem } from "../interfaces/OrderProps";
 
 const ProductList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -15,12 +14,13 @@ const ProductList: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
-  const API_URL = "http://localhost:3002/api/products/";
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(API_URL);
+        const response = await axios.get<Product[]>(
+          "http://localhost:3002/api/products/"
+        );
         setProducts(response.data);
       } catch (error: any) {
         setMessage("Lỗi khi tải danh sách sản phẩm: " + error.message);
@@ -37,14 +37,11 @@ const ProductList: React.FC = () => {
     productPrice: string
   ) => {
     try {
-      const newItem: CartItem = await axios.post(
-        "http://localhost:3003/api/orders/item",
-        {
-          user_id: userId,
-          product_id: productId,
-          product_price: productPrice,
-        }
-      );
+      await axios.post("http://localhost:3003/api/orders/item", {
+        user_id: userId,
+        product_id: productId,
+        product_price: productPrice,
+      });
 
       setMessage("✅ Đã thêm sản phẩm vào giỏ hàng!");
       setMessageType("success");

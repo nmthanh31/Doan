@@ -42,7 +42,7 @@ exports.updateQuanity = (req, res) => {
 };
 
 exports.removeItemFromOrder = (req, res) => {
-  const { order_id, product_id } = req.body;
+  const { order_id, product_id } = req.query; // <<< Sửa từ params thành query
 
   try {
     const result = orderService.removeItemFromOrder(order_id, product_id);

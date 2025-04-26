@@ -1,7 +1,6 @@
-import fs from 'fs';
-import {parse} from 'csv-parse/sync';
-import { stringify } from 'csv-stringify/sync';
-
+const fs = require("fs");
+const { parse } = require("csv-parse/sync");
+const { stringify } = require("csv-stringify/sync");
 
 const readCSV = (filePath) => {
   const content = fs.readFileSync(filePath);
@@ -16,4 +15,4 @@ const writeCSV = (filePath, data) => {
   fs.writeFileSync(filePath, csv);
 };
 
-export { readCSV, writeCSV };
+module.exports = { readCSV, writeCSV };

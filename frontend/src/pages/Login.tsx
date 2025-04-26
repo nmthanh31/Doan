@@ -1,8 +1,9 @@
-import { use, useEffect, useState } from "react";
+import { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
+import { LoginResponse } from "../interfaces/LoginResponse";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -12,26 +13,26 @@ const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useAuth(); 
+  const { login } = useAuth();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  }; 
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); 
+    setIsLoading(true);
 
     try {
       axios.defaults.withCredentials = true;
 
-      const response = await axios.post(
+      const response = await axios.post<LoginResponse>(
         "http://localhost:3001/api/users/login",
         {
           email: formData.email,
           password: formData.password,
         },
         {
-          withCredentials: true, 
+          withCredentials: true,
           headers: {
             "Content-Type": "application/json",
           },
@@ -117,7 +118,7 @@ const LoginPage = () => {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-white"
-                tabIndex={-1} 
+                tabIndex={-1}
               >
                 {showPassword ? (
                   <EyeSlashIcon className="h-5 w-5" />

@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const SuccessPage = () => {
-  const { order_id } = useParams(); 
+  const { order_id } = useParams();
   const orderId = order_id;
   const navigate = useNavigate();
 
@@ -12,7 +12,11 @@ const SuccessPage = () => {
       try {
         if (!orderId) return;
 
-        const res = await axios.patch(
+        interface UpdateOrderResponse {
+          message: string;
+        }
+
+        const res = await axios.patch<UpdateOrderResponse>(
           "http://localhost:3003/api/orders/order/update-status",
           { order_id: orderId }
         );
@@ -20,7 +24,7 @@ const SuccessPage = () => {
         if (res.data.message === "updated") {
           setTimeout(() => {
             navigate("/products");
-          }, 3000); 
+          }, 3000);
         }
       } catch (err) {
         console.error("Failed to update order status:", err);

@@ -50,14 +50,14 @@ const OrderPage: React.FC = () => {
 
         setProducts(response.data);
       } catch (error) {
-        console.log("Lỗi khi tải danh sách sản phẩm: " + error.message);
+        console.log("Lỗi khi tải danh sách sản phẩm,", error);
       }
     };
 
     fetchProducts();
   }, []);
 
-  const findProductById = (id: number) => {
+  const findProductById = (id: string) => {
     return products.find((product) => product.id == id);
   };
 
@@ -66,18 +66,18 @@ const OrderPage: React.FC = () => {
   };
 
   const removeFromCart = async (orderId: string, productId: string) => {
-    const response = await axios.delete(
+    const response = await axios.delete<{ id: string }>(
       `http://localhost:3003/api/orders/item/delete-item`,
       {
-        data: {
+        params: {
           order_id: orderId,
           product_id: productId,
         },
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
-
-    console.log(response.data.message);
-    console.log(response.data.id);
 
     setItemsInCart((prevItems) =>
       prevItems.filter((item) => item.id !== response.data.id)
@@ -89,15 +89,16 @@ const OrderPage: React.FC = () => {
     productId: string,
     quantity: number
   ) => {
-    const response = await axios.patch(
-      "http://localhost:3003/api/orders/item/update-quantity",
-      {
-        order_id: orderId,
-        product_id: productId,
-        quantity: quantity,
-      }
-    );
-    console.log(response.data.message);
+    const response = await axios.patch<{
+      message: string;
+      id: string;
+      item: CartItem;
+    }>("http://localhost:3003/api/orders/item/update-quantity", {
+      order_id: orderId,
+      product_id: productId,
+      quantity: quantity,
+    });
+
     if (response.data.message == "delete") {
       console.log(response.data.id);
       setItemsInCart((prevItems) =>
@@ -114,10 +115,13 @@ const OrderPage: React.FC = () => {
 
   const checkout = async (amount: number) => {
     try {
-      const res = await axios.post("http://localhost:3004/api/payment", {
-        amount: amount,
-        order_id: cartOrder?.id,
-      });
+      const res = await axios.post<{ data: { payUrl: string } }>(
+        "http://localhost:3004/api/payment",
+        {
+          amount: amount,
+          order_id: cartOrder?.id,
+        }
+      );
 
       const payUrl = res.data.data.payUrl;
       console.log("Payment URL:", payUrl);
@@ -183,7 +187,7 @@ const OrderPage: React.FC = () => {
                                 aria-label="delete"
                                 onClick={() =>
                                   removeFromCart(
-                                    cartOrder?.id.toString(),
+                                    cartOrder?.id.toString() || "",
                                     item.product_id.toString()
                                   )
                                 }
@@ -209,7 +213,7 @@ const OrderPage: React.FC = () => {
                                 size="small"
                                 onClick={() =>
                                   updateQuantity(
-                                    cartOrder?.id.toString(),
+                                    cartOrder?.id.toString() || "",
                                     item.product_id.toString(),
                                     -1
                                   )
@@ -224,7 +228,7 @@ const OrderPage: React.FC = () => {
                                 size="small"
                                 onClick={() =>
                                   updateQuantity(
-                                    cartOrder?.id.toString(),
+                                    cartOrder?.id.toString() || "",
                                     item.product_id.toString(),
                                     1
                                   )

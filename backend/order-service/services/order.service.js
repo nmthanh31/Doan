@@ -14,7 +14,6 @@ exports.getOrderByUserID = (user_id) => {
   return orders.filter((order) => order.user_id === user_id);
 };
 
-
 exports.getItemsInOrder = (order_id) => {
   const items = readCSV(fileItemPath);
   return items.filter((item) => item.order_id === order_id);
@@ -33,9 +32,10 @@ exports.updateQuantity = (order_id, product_id, quantity = 1) => {
   if (order_id == -1) {
     return {
       message: "order not found",
+      item: null,
+      id: "-1",
     };
   }
-
 
   const items = readCSV(fileItemPath);
   let itemId;
@@ -51,6 +51,8 @@ exports.updateQuantity = (order_id, product_id, quantity = 1) => {
   if (itemIndex == -1) {
     return {
       message: "item not found",
+      item: null,
+      id: "-1",
     };
   }
 
@@ -67,10 +69,10 @@ exports.updateQuantity = (order_id, product_id, quantity = 1) => {
   orders[orderIndex].total = this.calculateTotal(order_id);
   writeCSV(fileOrderPath, orders);
 
-
   if (isDone) {
     return {
       message: "delete",
+      item: null,
       id: itemId,
     };
   }
@@ -93,6 +95,7 @@ exports.addItemToOrder = (user_id, product_id, product_price) => {
       break;
     }
   }
+
   if (order_id == -1) {
     order_id = generateId(orders);
     const newOrder = {
@@ -104,9 +107,8 @@ exports.addItemToOrder = (user_id, product_id, product_price) => {
     };
 
     orders.push(newOrder);
+    orderIndex = orders.length - 1;
   }
-
-  console.log("order old total", orders[orderIndex].total);
 
   const items = readCSV(fileItemPath);
 
@@ -125,7 +127,6 @@ exports.addItemToOrder = (user_id, product_id, product_price) => {
       parseInt(orders[orderIndex].total) + parseInt(product_price);
     writeCSV(fileOrderPath, orders);
 
-    console.log("new order total", orders[orderIndex].total);
     return items[itemIndex];
   }
 
@@ -142,10 +143,6 @@ exports.addItemToOrder = (user_id, product_id, product_price) => {
     parseInt(orders[orderIndex].total) + parseInt(product_price);
   writeCSV(fileOrderPath, orders);
 
-  console.log("newItem price", newItem.price);
-
-  console.log("new order total", orders[orderIndex].total);
-
   return newItem;
 };
 
@@ -160,7 +157,6 @@ exports.calculateTotal = (order_id) => {
     }
   }
   if (order_id == -1) {
-    console.log("order not found");
     return {
       message: "eo có đơn hàng này trong giỏ hàng",
     };
@@ -193,6 +189,7 @@ exports.removeItemFromOrder = (order_id, product_id) => {
   if (order_id == -1) {
     return {
       message: "order not found",
+      id: "-1",
     };
   }
 
@@ -210,6 +207,7 @@ exports.removeItemFromOrder = (order_id, product_id) => {
   if (itemIndex == -1) {
     return {
       message: "item not found",
+      id: "-1",
     };
   }
 
@@ -227,8 +225,6 @@ exports.removeItemFromOrder = (order_id, product_id) => {
 };
 
 exports.updateStatus = (order_id) => {
-  console.log("update order status", order_id);
-
   const orders = readCSV(fileOrderPath);
   let orderIndex = -1;
 
@@ -243,11 +239,9 @@ exports.updateStatus = (order_id) => {
       message: "order not found",
     };
   }
-  console.log("old order", orders[orderIndex]);
 
   orders[orderIndex].status = "completed";
 
-  console.log("new order", orders[orderIndex]);
   writeCSV(fileOrderPath, orders);
 
   return {
