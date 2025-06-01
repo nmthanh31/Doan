@@ -27,7 +27,7 @@ const OrderPage: React.FC = () => {
   useEffect(() => {
     const userId = localStorage.getItem("userId");
 
-    axios.get(`http://localhost:3003/api/orders/user/${userId}`).then((res) => {
+    axios.get(`/api/orders/user/${userId}`).then((res) => {
       const userOrders = res.data as Order[];
       const incart = userOrders.find((o) => o.status === "incart");
       setCartOrder(incart || null);
@@ -35,7 +35,7 @@ const OrderPage: React.FC = () => {
 
       if (incart) {
         axios
-          .get(`http://localhost:3003/api/orders/items/${incart.id}`)
+          .get(`/api/orders/items/${incart.id}`)
           .then((res) => setItemsInCart(res.data as CartItem[]));
       }
     });
@@ -43,7 +43,7 @@ const OrderPage: React.FC = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get<Product[]>(
-          "http://localhost:3002/api/products/"
+          "/api/products/"
         );
 
         console.log(response.data);
@@ -67,7 +67,7 @@ const OrderPage: React.FC = () => {
 
   const removeFromCart = async (orderId: string, productId: string) => {
     const response = await axios.delete<{ id: string }>(
-      `http://localhost:3003/api/orders/item/delete-item`,
+      `/api/orders/item/delete-item`,
       {
         params: {
           order_id: orderId,
@@ -93,7 +93,7 @@ const OrderPage: React.FC = () => {
       message: string;
       id: string;
       item: CartItem;
-    }>("http://localhost:3003/api/orders/item/update-quantity", {
+    }>("/api/orders/item/update-quantity", {
       order_id: orderId,
       product_id: productId,
       quantity: quantity,
@@ -116,7 +116,7 @@ const OrderPage: React.FC = () => {
   const checkout = async (amount: number) => {
     try {
       const res = await axios.post<{ data: { payUrl: string } }>(
-        "http://localhost:3004/api/payment",
+        "/api/payment",
         {
           amount: amount,
           order_id: cartOrder?.id,

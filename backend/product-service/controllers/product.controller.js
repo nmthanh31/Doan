@@ -14,15 +14,22 @@ exports.getProductById = (req, res) => {
   res.json(product);
 };
 
-exports.getImage = (req, res) => {
-  const imageName = req.params.imageName;
-  const imagePath = path.join(__dirname, "../data/static/", imageName);
+// exports.getImage = (req, res) => {
+//   const filename = req.params.filename;
+//   const imagePath = path.join(__dirname, "../data/static", filename);
 
-  fs.access(imagePath, fs.constants.F_OK, (err) => {
-    if (err) {
-      return res.status(404).send("Image not found");
-    }
+//   console.log("Serving image from:", imagePath); // debug log
 
-    res.sendFile(imagePath);
-  });
-};
+//   fs.access(imagePath, fs.constants.F_OK, (err) => {
+//     if (err) {
+//       return res.status(404).json({ error: "Image not found" });
+//     }
+
+//     res.sendFile(imagePath, (err) => {
+//       if (err) {
+//         console.error("Error sending image:", err);
+//         res.status(500).json({ error: "Error sending image" });
+//       }
+//     });
+//   });
+// };

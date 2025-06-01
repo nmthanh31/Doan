@@ -1,46 +1,183 @@
+# version: '3.8'
+
+# networks:
+#   app-network:
+#     driver: bridge
+
+# services:
+#   nginx:
+#     image: nginx:alpine
+#     ports:
+#       - "80:80"
+#     volumes:
+#       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+#       - ./frontend/dist:/usr/share/nginx/html
+#     networks:
+#       - app-network
+#     depends_on:
+#       - user-service
+#       - product-service
+#       - order-service
+#       - payment-service
+#     restart: unless-stopped
+
+#   user-service:
+#     build: ./backend/user-service
+#     environment:
+#       - NODE_ENV=production
+#       - PORT=3001
+#       - JWT_SECRET=your_jwt_secret_here
+#     volumes:
+#       - ./backend/user-service:/app
+#       - /app/node_modules
+#     networks:
+#       - app-network
+#     expose:
+#       - "3001"
+#     restart: unless-stopped
+
+#   product-service:
+#     build: ./backend/product-service
+#     environment:
+#       - NODE_ENV=production
+#       - PORT=3002
+#       - JWT_SECRET=your_jwt_secret_here
+#     volumes:
+#       - ./backend/product-service:/app
+#       - /app/node_modules
+#       - ./backend/product-service/data/static:/app/data/static:ro
+#     networks:
+#       - app-network
+#     expose:
+#       - "3002"
+#     restart: unless-stopped
+
+#   order-service:
+#     build: ./backend/order-service
+#     environment:
+#       - NODE_ENV=production
+#       - PORT=3003
+#       - JWT_SECRET=your_jwt_secret_here
+#     volumes:
+#       - ./backend/order-service:/app
+#       - /app/node_modules
+#     networks:
+#       - app-network
+#     expose:
+#       - "3003"
+#     restart: unless-stopped
+
+#   payment-service:
+#     build: ./backend/payment-service
+#     environment:
+#       - NODE_ENV=production
+#       - PORT=3004
+#       - JWT_SECRET=your_jwt_secret_here
+#     volumes:
+#       - /app/node_modules
+#     networks:
+#       - app-network
+#     expose:
+#       - "3004"
+#     restart: unless-stopped
+
+#   frontend:
+#     build: ./frontend
+#     volumes:
+#       - ./frontend:/app
+#       - /app/node_modules
+#     environment:
+#       - NODE_ENV=development
+#       - VITE_API_BASE_URL=/api
+#     ports:
+#       - "5173:5173" # Vite dev server port
+#     stdin_open: true
+#     tty: true
+#     depends_on:
+#       - user-service
+#       - product-service
+#       - order-service
+#       - payment-service
+version: '3.8'
+
+networks:
+  app-network:
+    driver: bridge
+
 services:
-  user-service:
-    build: ./backend/user-service
-    ports:
-      - "3001:3001"
-    volumes:
-      - ./backend/user-service/data:/app/data
-    restart: always
-
-  product-service:
-    build: ./backend/product-service
-    ports:
-      - "3002:3002"
-    volumes:
-      - ./backend/product-service/data:/app/data
-    restart: always
-
-  order-service:
-    build: ./backend/order-service
-    ports:
-      - "3003:3003"
-    volumes:
-      - ./backend/order-service/data:/app/data
-    restart: always
-
-  payment-service:
-    build: ./backend/payment-service
-    ports:
-      - "3004:3004"
-    restart: always
-
+  # Frontend build sẵn trong Dockerfile, chạy với Nginx luôn
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "80:80"
-    restart: always
+    networks:
+      - app-network
     depends_on:
       - user-service
       - product-service
       - order-service
       - payment-service
+    restart: unless-stopped
 
-volumes:
-  user-service-data:
-  product-service-data:
-  order-service-data:
+  user-service:
+    build: ./backend/user-service
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - JWT_SECRET=your_jwt_secret_here
+    volumes:
+      - ./backend/user-service:/app
+      - /app/node_modules
+    networks:
+      - app-network
+    expose:
+      - "3001:3001"
+    restart: unless-stopped
+
+  product-service:
+    build: ./backend/product-service
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+      - JWT_SECRET=your_jwt_secret_here
+    volumes:
+      - ./backend/product-service:/app
+      - /app/node_modules
+      - ./backend/product-service/data/static:/app/data/static:ro
+    networks:
+      - app-network
+    expose:
+      - "3002:3002"
+    restart: unless-stopped
+
+  order-service:
+    build: ./backend/order-service
+    environment:
+      - NODE_ENV=production
+      - PORT=3003
+      - JWT_SECRET=your_jwt_secret_here
+    volumes:
+      - ./backend/order-service:/app
+      - /app/node_modules
+    networks:
+      - app-network
+    expose:
+      - "3003:3003"
+    restart: unless-stopped
+
+  payment-service:
+    build: ./backend/payment-service
+    environment:
+      - NODE_ENV=production
+      - PORT=3004
+      - JWT_SECRET=your_jwt_secret_here
+    volumes:
+      - ./backend/payment-service:/app
+      - /app/node_modules
+    networks:
+      - app-network
+    expose:
+      - "3004:3004"
+    restart: unless-stopped

@@ -13,10 +13,6 @@ RUN npm install
 # Copy toàn bộ project vào container (trừ những file .dockerignore nếu có)
 COPY . .
 
-# COPY ./data ./data
-
-# COPY ./data/orders.csv ./data/orders.csv
-# COPY ./data/order_items.csv ./data/order_items.csv
 
 EXPOSE 3003
 

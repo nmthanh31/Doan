@@ -1,24 +1,23 @@
 # Base image
 FROM node:18-alpine
 
-# Set thư mục làm việc trong container
+# Đặt thư mục làm việc trong container
 WORKDIR /app
 
-# Copy package.json và package-lock.json trước
+# Copy package.json và package-lock.json để cài dependencies trước
 COPY package*.json ./
 
-# Cài đặt thư viện
+# Cài đặt các package (dependencies)
 RUN npm install
 
-# Copy toàn bộ project vào container (trừ những file .dockerignore nếu có)
+# Copy toàn bộ mã nguồn (trừ những file nằm trong .dockerignore)
 COPY . .
 
+# Nếu bạn có thư mục data hoặc file CSV cần thiết, hãy copy nó nếu chưa có trong mã nguồn
 # COPY ./data ./data
 
-# COPY ./data/users.csv ./data/users.csv
-
-# Mở port (port app bạn đang listen, mình thấy là 3001)
+# Mở port mà service sẽ lắng nghe (ví dụ 3001)
 EXPOSE 3001
 
-# Lệnh khởi chạy app
+# Lệnh để khởi động service Node.js (file chính của bạn là index.js)
 CMD ["node", "index.js"]

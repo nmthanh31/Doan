@@ -18,9 +18,7 @@ const ProductList: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get<Product[]>(
-          "http://localhost:3002/api/products/"
-        );
+        const response = await axios.get<Product[]>("/api/products/");
         setProducts(response.data);
       } catch (error: any) {
         setMessage("Lỗi khi tải danh sách sản phẩm: " + error.message);
@@ -37,7 +35,7 @@ const ProductList: React.FC = () => {
     productPrice: string
   ) => {
     try {
-      await axios.post("http://localhost:3003/api/orders/item", {
+      await axios.post("/api/orders/item", {
         user_id: userId,
         product_id: productId,
         product_price: productPrice,

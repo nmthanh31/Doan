@@ -17,7 +17,7 @@ const SuccessPage = () => {
         }
 
         const res = await axios.patch<UpdateOrderResponse>(
-          "http://localhost:3003/api/orders/order/update-status",
+          "/api/orders/order/update-status",
           { order_id: orderId }
         );
 
