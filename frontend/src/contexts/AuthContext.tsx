@@ -41,9 +41,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (token) {
       axios
-        .get("http://localhost:3001/api/users/current", {
+        .get("/api/users/current", {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         })
         .then((res) => {

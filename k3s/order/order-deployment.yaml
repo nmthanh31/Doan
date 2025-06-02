@@ -1,0 +1,77 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs-sc # Đặt một tên dễ hiểu
+provisioner: kubernetes.io/no-provisioner # Chỉ ra cấp phát tĩnh
+volumeBindingMode: WaitForFirstConsumer # Quan trọng trong một số trường hợp
+reclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: order-data-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany # NFS hỗ trợ ReadWriteMany
+  nfs:
+    server: 192.168.182.130
+    path: /data/order-service
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-sc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: order-data-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: nfs-sc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+  labels:
+    app: order-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+    spec:
+      containers:
+        - name: order-service
+          image: nmthanh31/order-service:latest
+          ports:
+            - containerPort: 3003
+          volumeMounts:
+            - name: order-data-volume
+              mountPath: /app/data # Đường dẫn trong container bạn dùng để đọc ghi CSV
+      volumes:
+        - name: order-data-volume
+          persistentVolumeClaim:
+            claimName: order-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+spec:
+  selector:
+    app: order-service
+  ports:
+    - protocol: TCP
+      port: 3003
+      targetPort: 3003
+  type: LoadBalancer # Hoặc NodePort nếu bạn muốn truy cập từ bên ngoài

@@ -1,0 +1,77 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs-sc # Đặt một tên dễ hiểu
+provisioner: kubernetes.io/no-provisioner # Chỉ ra cấp phát tĩnh
+volumeBindingMode: WaitForFirstConsumer # Quan trọng trong một số trường hợp
+reclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: product-data-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.182.130
+    path: /data/product-service
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-sc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: product-data-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: nfs-sc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service
+  labels:
+    app: product-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-service
+  template:
+    metadata:
+      labels:
+        app: product-service
+    spec:
+      containers:
+        - name: product-service
+          image: nmthanh31/product-service:latest
+          ports:
+            - containerPort: 3002
+          volumeMounts:
+            - name: product-data-volume
+              mountPath: /app/data # Đường dẫn trong container bạn dùng để đọc ghi CSV
+      volumes:
+        - name: product-data-volume
+          persistentVolumeClaim:
+            claimName: product-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-service
+spec:
+  selector:
+    app: product-service
+  ports:
+    - protocol: TCP
+      port: 3002
+      targetPort: 3002
+  type: LoadBalancer

@@ -7,28 +7,49 @@ const userRoutes = require("./routes/user.routes");
 
 const app = express();
 
+// app.use(
+//   cors({
+//     origin: "http://localhost", // Hoặc "*" nếu muốn mở hoàn toàn
+//     methods: "GET,POST,PUT,DELETE",
+//     credentials: true, // Cho phép gửi cookie/session
+//   })
+// );
+
+app.use(express.json());
+// Thêm dòng này để chấp nhận proxy từ Nginx
+app.set("trust proxy", 1);
+
+// Cập nhật CORS configuration
 app.use(
   cors({
-    origin: "http://localhost:5174", // Hoặc "*" nếu muốn mở hoàn toàn
+    origin: true, // Cho phép tất cả domain (hoặc có thể chỉ định domain cụ thể)
     methods: "GET,POST,PUT,DELETE",
-    credentials: true, // Cho phép gửi cookie/session
+    credentials: true,
   })
 );
 
-app.use(express.json());
-
+// Cập nhật session configuration để hoạt động với proxy
 app.use(
   session({
     secret: "your-secret-key",
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 24 * 60 * 60 * 1000, // 1 ngày
+      maxAge: 24 * 60 * 60 * 1000,
+      sameSite: "lax",
+      secure: false, // Đặt thành true nếu dùng HTTPS
+      httpOnly: true,
     },
   })
 );
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "OK" });
+});
+
 app.use("/api/users", userRoutes);
 
 const PORT = 3001;
-app.listen(PORT, () => console.log(`User Service running on port ${PORT}`));
+app.listen(PORT, "0.0.0.0", () =>
+  console.log(`User Service running on port ${PORT}`)
+);
