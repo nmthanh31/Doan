@@ -28,16 +28,16 @@ jobs:
           docker build -t $IMAGE_PREFIX/frontend ./frontend
           docker push $IMAGE_PREFIX/frontend
 
-          docker build -t $IMAGE_PREFIX/user-service ./user-service
+          docker build -t $IMAGE_PREFIX/user-service ./backend/user-service
           docker push $IMAGE_PREFIX/user-service
 
-          docker build -t $IMAGE_PREFIX/product-service ./product-service
+          docker build -t $IMAGE_PREFIX/product-service ./backend/product-service
           docker push $IMAGE_PREFIX/product-service
 
-          docker build -t $IMAGE_PREFIX/order-service ./order-service
+          docker build -t $IMAGE_PREFIX/order-service ./backend/order-service
           docker push $IMAGE_PREFIX/order-service
 
-          docker build -t $IMAGE_PREFIX/payment-service ./payment-service
+          docker build -t $IMAGE_PREFIX/payment-service ./backend/payment-service
           docker push $IMAGE_PREFIX/payment-service
 
       - name: Decode kubeconfig
