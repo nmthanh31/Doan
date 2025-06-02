@@ -42,7 +42,7 @@ jobs:
 
       - name: Decode kubeconfig
         run: |
-          echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig.yaml
+          echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > kubeconfig.yaml
 
       - name: Set KUBECONFIG
         run: |
