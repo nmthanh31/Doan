@@ -45,7 +45,7 @@ jobs:
         run: kubectl get nodes
 
       - name: Deploy to Kubernetes
-        run: kubectl apply -f k8s/
+        run: kubectl apply -f k3s/
 
       - name: Check rollout status
         run: |
