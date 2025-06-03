@@ -45,7 +45,11 @@ jobs:
         run: kubectl get nodes
 
       - name: Deploy to Kubernetes
-        run: kubectl apply -f k3s/
+        run: kubectl apply -f k3s/frontend/frontend-deployment.yaml
+        run: kubectl apply -f k3s/user/user-deployment.yaml
+        run: kubectl apply -f k3s/product/product-deployment.yaml
+        run: kubectl apply -f k3s/order/order-deployment.yaml
+        run: kubectl apply -f k3s/payment/payment-deployment.yaml
 
       - name: Check rollout status
         run: |
