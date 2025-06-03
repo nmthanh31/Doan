@@ -8,6 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      KUBECONFIG: ${{ github.workspace }}/kubeconfig.yaml
 
     steps:
       - name: Checkout source code
@@ -27,30 +29,32 @@ jobs:
           IMAGE_PREFIX=${{ secrets.DOCKER_USERNAME }}
           docker build -t $IMAGE_PREFIX/frontend ./frontend
           docker push $IMAGE_PREFIX/frontend
-
           docker build -t $IMAGE_PREFIX/user-service ./backend/user-service
           docker push $IMAGE_PREFIX/user-service
-
           docker build -t $IMAGE_PREFIX/product-service ./backend/product-service
           docker push $IMAGE_PREFIX/product-service
-
           docker build -t $IMAGE_PREFIX/order-service ./backend/order-service
           docker push $IMAGE_PREFIX/order-service
-
           docker build -t $IMAGE_PREFIX/payment-service ./backend/payment-service
           docker push $IMAGE_PREFIX/payment-service
 
       - name: Decode kubeconfig
-        run: |
-          echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > kubeconfig.yaml
+        run: echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > $KUBECONFIG
 
-      - name: Set KUBECONFIG
-        run: |
-          export KUBECONFIG=$PWD/kubeconfig.yaml
-          kubectl version --client
-          kubectl get nodes
+      - name: Verify Kubernetes access
+        run: kubectl get nodes
 
       - name: Deploy to Kubernetes
+        run: kubectl apply -f k8s/
+
+      - name: Check rollout status
         run: |
-          export KUBECONFIG=$PWD/kubeconfig.yaml
-          kubectl apply -f k8s/
+          kubectl rollout status deployment/frontend
+          kubectl rollout status deployment/user-service
+          kubectl rollout status deployment/product-service
+          kubectl rollout status deployment/order-service
+          kubectl rollout status deployment/payment-service
+
+      - name: Clean up kubeconfig
+        if: always()
+        run: rm -f $KUBECONFIG
