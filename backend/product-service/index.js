@@ -34,15 +34,6 @@ app.use(
   })
 );
 
-app.use(
-  "/images/",
-  express.static(path.join(__dirname, "data/static"), {
-    setHeaders: (res, path, stat) => {
-      res.set("Access-Control-Allow-Origin", "*");
-    },
-  })
-);
-
 
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "OK" });

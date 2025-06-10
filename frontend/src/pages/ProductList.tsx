@@ -58,6 +58,20 @@ const ProductList: React.FC = () => {
     setTimeout(() => setMessage(null), 3000);
   };
 
+  const handleLoadImage = (image_url: string) => {
+    if (image_url == "T-shirt.png") {
+      return "static/T-shirt.png";
+    } else if (image_url == "jean.png") {
+      return "static/jean.png";
+    } else if (image_url == "shirt.png") {
+      return "static/Jacket.png";
+    } else if (image_url == "short.png") {
+      return "static/short.png";
+    } else {
+      return "static/polo.png";
+    }
+  };
+
   return (
     <div className="container bg-white mx-auto px-4">
       <div className="flex justify-between items-center py-4 border-b">
@@ -97,7 +111,7 @@ const ProductList: React.FC = () => {
             key={product.id}
             title={product.name}
             price={product.price}
-            image={`http://localhost/images/images/${product.image_url}`}
+            image={handleLoadImage(product.image_url)}
             rating={product.rating}
             onAddToCart={() => {
               if (userId) {
