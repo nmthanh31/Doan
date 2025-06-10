@@ -97,7 +97,7 @@ const ProductList: React.FC = () => {
             key={product.id}
             title={product.name}
             price={product.price}
-            image={`http://localhost/images/${product.image_url}`}
+            image={`http://localhost/images/images/${product.image_url}`}
             rating={product.rating}
             onAddToCart={() => {
               if (userId) {
