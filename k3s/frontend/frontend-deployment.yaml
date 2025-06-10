@@ -18,6 +18,7 @@ spec:
       containers:
         - name: frontend
           image: nmthanh31/frontend:latest # Thay bằng image của bạn
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000 # Port ứng dụng frontend (React/Vite)
 ---

@@ -53,6 +53,7 @@ spec:
       containers:
         - name: user-service
           image: nmthanh31/user-service:latest
+          imagePullPolicy: Always 
           ports:
             - containerPort: 3001
           volumeMounts:

@@ -53,6 +53,7 @@ spec:
       containers:
         - name: product-service
           image: nmthanh31/product-service:latest
+          imagePullPolicy: Always 
           ports:
             - containerPort: 3002
           volumeMounts:

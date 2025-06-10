@@ -53,6 +53,7 @@ spec:
       containers:
         - name: order-service
           image: nmthanh31/order-service:latest
+          imagePullPolicy: Always 
           ports:
             - containerPort: 3003
           volumeMounts:
