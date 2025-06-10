@@ -5,7 +5,7 @@ import { User } from "../interfaces/UserProps";
 
 type AuthContextType = {
   user: User | null;
-  login: (user: User, token: string) => void;
+  login: (user: User) => void;
   logout: () => void;
 };
 
