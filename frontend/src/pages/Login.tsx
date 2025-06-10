@@ -6,6 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { LoginResponse } from "../interfaces/LoginResponse";
 
 const LoginPage = () => {
+  axios.defaults.withCredentials = true;
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -23,8 +24,6 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      axios.defaults.withCredentials = true;
-
       const response = await axios.post<LoginResponse>(
         "/api/users/login",
         {
@@ -40,7 +39,7 @@ const LoginPage = () => {
       );
 
       if (response.data.user) {
-        login(response.data.user, response.data.token);
+        login(response.data.user);
       } else {
         setErrorMessage("Đăng nhập không thành công. Vui lòng kiểm tra lại.");
       }
@@ -58,7 +57,7 @@ const LoginPage = () => {
       <div className="bg-gray-900 rounded-lg shadow-lg p-8 w-full max-w-md">
         <div className="flex flex-col items-center">
           <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-white">
-            Đăng nhập đã sửa nè 
+            Đăng nhập đã sửa nè
           </h2>
         </div>
 

@@ -17,11 +17,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
 
-  const login = (userData: User, token: string) => {
-    console.log("Saving token to localStorage:", token);
-    localStorage.setItem("token", token);
-    localStorage.setItem("userId", userData.id);
+  const login = (userData: User) => {
     setUser(userData);
+    localStorage.setItem("userId", userData.id); // optional nếu bạn cần
     navigate("/products");
   };
 
@@ -33,33 +31,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      console.warn("Không tìm thấy token!");
-    }
-
-    if (token) {
-      axios
-        .get("/api/users/current", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        })
-        .then((res) => {
-          const userData = res.data as { user: User };
-          localStorage.setItem("userId", userData.user.id);
-          setUser(userData.user);
-        })
-        .catch((err) => {
-          console.error(
-            "Failed to load user from token:",
-            err.response?.data || err
-          );
-          setUser(null);
-        });
-    }
+    axios
+      .get("/api/users/current", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        const userData = res.data as { user: User };
+        setUser(userData.user);
+      })
+      .catch((err) => {
+        console.error(
+          "Không thể load user từ cookie:",
+          err.response?.data || err
+        );
+        setUser(null);
+      });
   }, []);
 
   return (

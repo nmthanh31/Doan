@@ -4,16 +4,11 @@ const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
 const userRoutes = require("./routes/user.routes");
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 
 const app = express();
 
-// app.use(
-//   cors({
-//     origin: "http://localhost", // Hoặc "*" nếu muốn mở hoàn toàn
-//     methods: "GET,POST,PUT,DELETE",
-//     credentials: true, // Cho phép gửi cookie/session
-//   })
-// );
 
 app.use(express.json());
 // Thêm dòng này để chấp nhận proxy từ Nginx

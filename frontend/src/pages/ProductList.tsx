@@ -64,7 +64,7 @@ const ProductList: React.FC = () => {
     } else if (image_url == "jean.png") {
       return "static/jean.png";
     } else if (image_url == "shirt.png") {
-      return "static/Jacket.png";
+      return "static/shirt.png";
     } else if (image_url == "short.png") {
       return "static/short.png";
     } else {

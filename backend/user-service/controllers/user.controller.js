@@ -32,7 +32,6 @@ exports.login = (req, res) => {
     }
 
     const isPasswordValid = password === user.password;
-
     if (!isPasswordValid) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
@@ -49,13 +48,17 @@ exports.login = (req, res) => {
       process.env.JWT_SECRET || "mysecret",
       { expiresIn: "1d" }
     );
-    
 
-
+    // 🔐 Gửi token bằng HTTP-only cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,        // 🔁 set true nếu bạn dùng HTTPS
+      sameSite: "Lax",      // hoặc "None" nếu frontend khác domain
+      maxAge: 24 * 60 * 60 * 1000,
+    });
 
     res.json({
       message: "Login successful",
-      token,
       user: {
         id: user.id,
         full_name: user.full_name,
@@ -72,10 +75,10 @@ exports.login = (req, res) => {
 };
 
 exports.logout = async (req, res) => {
-  req.session.destroy(() => {
-    res.json({ message: "Logout successful" });
-  });
+  res.clearCookie("token");
+  res.json({ message: "Logout successful" });
 };
+
 
 exports.profile = (req, res) => {
   if (!req.session.user) {
