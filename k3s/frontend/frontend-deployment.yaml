@@ -17,9 +17,9 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: nmthanh31/ecomerce-frontend:v1     # Thay bằng image của bạn
+          image: nmthanh31/frontend:latest # Thay bằng image của bạn
           ports:
-            - containerPort: 3000              # Port ứng dụng frontend (React/Vite)
+            - containerPort: 3000 # Port ứng dụng frontend (React/Vite)
 ---
 apiVersion: v1
 kind: Service
@@ -29,6 +29,6 @@ spec:
   selector:
     app: frontend
   ports:
-    - port: 80              # Port người dùng truy cập
-      targetPort: 80      # Port trong container
-  type: LoadBalancer        # Nhờ MetalLB cấp IP nội bộ để truy cập
+    - port: 80 # Port người dùng truy cập
+      targetPort: 80 # Port trong container
+  type: LoadBalancer # Nhờ MetalLB cấp IP nội bộ để truy cập
