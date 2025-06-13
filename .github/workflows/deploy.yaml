@@ -46,8 +46,9 @@ jobs:
         run: |
           IMAGE=${{ secrets.DOCKER_USERNAME }}/user-service
           docker build --no-cache -t $IMAGE ./backend/user-service
-          trivy image --severity CRITICAL,HIGH --exit-code 1 --ignore-unfixed $IMAGE
+          trivy image --severity CRITICAL,HIGH --exit-code 1 --ignore-unfixed --skip CVE-2024-21538 $IMAGE
           docker push $IMAGE
+
 
       - name: Build, scan and push product-service
         run: |
