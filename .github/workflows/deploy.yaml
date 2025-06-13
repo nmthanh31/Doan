@@ -38,35 +38,35 @@ jobs:
       - name: Build, scan and push frontend
         run: |
           IMAGE=${{ secrets.DOCKER_USERNAME }}/frontend
-          docker build -t $IMAGE ./frontend
+          docker build --no-cache -t $IMAGE ./frontend
           trivy image --severity CRITICAL,HIGH --exit-code 1 --ignore-unfixed $IMAGE
           docker push $IMAGE
 
       - name: Build, scan and push user-service
         run: |
           IMAGE=${{ secrets.DOCKER_USERNAME }}/user-service
-          docker build -t $IMAGE ./backend/user-service
+          docker build --no-cache -t $IMAGE ./backend/user-service
           trivy image --severity CRITICAL,HIGH --exit-code 1 --ignore-unfixed $IMAGE
           docker push $IMAGE
 
       - name: Build, scan and push product-service
         run: |
           IMAGE=${{ secrets.DOCKER_USERNAME }}/product-service
-          docker build -t $IMAGE ./backend/product-service
+          docker build --no-cache -t $IMAGE ./backend/product-service
           trivy image --severity CRITICAL,HIGH --exit-code 1 --ignore-unfixed $IMAGE
           docker push $IMAGE
 
       - name: Build, scan and push order-service
         run: |
           IMAGE=${{ secrets.DOCKER_USERNAME }}/order-service
-          docker build -t $IMAGE ./backend/order-service
+          docker build --no-cache -t $IMAGE ./backend/order-service
           trivy image --severity CRITICAL,HIGH --exit-code 1 --ignore-unfixed $IMAGE
           docker push $IMAGE
 
       - name: Build, scan and push payment-service
         run: |
           IMAGE=${{ secrets.DOCKER_USERNAME }}/payment-service
-          docker build -t $IMAGE ./backend/payment-service
+          docker build --no-cache -t $IMAGE ./backend/payment-service
           trivy image --severity CRITICAL,HIGH --exit-code 1 --ignore-unfixed $IMAGE
           docker push $IMAGE
 
