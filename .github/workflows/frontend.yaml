@@ -44,12 +44,16 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build, scan and push frontend
+      - name: Build, scan and push frontend image
         run: |
-          IMAGE=${{ secrets.DOCKER_USERNAME }}/frontend
+          IMAGE=${{ secrets.DOCKER_USERNAME }}/frontend:${{ github.sha }}
           docker build --no-cache -t $IMAGE ./frontend
           trivy image --severity CRITICAL,HIGH --exit-code 1 --ignore-unfixed $IMAGE
           docker push $IMAGE
+
+      - name: Inject image tag into Kubernetes YAML
+        run: |
+          sed -i "s|__IMAGE_TAG__|${{ github.sha }}|g" k3s/frontend/frontend-deployment.yaml
 
       - name: Decode kubeconfig
         run: echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > $KUBECONFIG

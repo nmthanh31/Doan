@@ -17,19 +17,22 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: nmthanh31/frontend:latest # Thay bằng image của bạn
+          image: nmthanh31/frontend:__IMAGE_TAG__
           imagePullPolicy: Always
           ports:
-            - containerPort: 3000 # Port ứng dụng frontend (React/Vite)
+            - containerPort: 3000
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: frontend
+  annotations:
+    metallb.universe.tf/allow-shared-ip: shared-frontend
 spec:
   selector:
     app: frontend
   ports:
-    - port: 80 # Port người dùng truy cập
-      targetPort: 80 # Port trong container
-  type: LoadBalancer # Nhờ MetalLB cấp IP nội bộ để truy cập
+    - port: 80
+      targetPort: 3000 # ⚠ targetPort phải khớp với containerPort
+  type: LoadBalancer
+  loadBalancerIP: 192.168.1.241 # ⚠ IP này phải thuộc dải MetalLB bạn đã cấu hình

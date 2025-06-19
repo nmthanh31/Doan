@@ -52,7 +52,7 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: nmthanh31/user-service:latest
+          image: nmthanh31/user-service:__IMAGE_TAG__
           imagePullPolicy: Always 
           ports:
             - containerPort: 3001

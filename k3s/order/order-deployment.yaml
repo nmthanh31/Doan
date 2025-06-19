@@ -52,7 +52,7 @@ spec:
     spec:
       containers:
         - name: order-service
-          image: nmthanh31/order-service:latest
+          image: nmthanh31/order-service:__IMAGE_TAG__
           imagePullPolicy: Always 
           ports:
             - containerPort: 3003

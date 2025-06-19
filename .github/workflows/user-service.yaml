@@ -46,10 +46,14 @@ jobs:
 
       - name: Build, scan and push user-service
         run: |
-          IMAGE=${{ secrets.DOCKER_USERNAME }}/user-service
+          IMAGE=${{ secrets.DOCKER_USERNAME }}/user-service:${{ github.sha }}
           docker build -t $IMAGE ./backend/user-service
           trivy image --severity CRITICAL,HIGH --exit-code 0 --ignore-unfixed $IMAGE
           docker push $IMAGE
+
+      - name: Inject image tag
+        run: |
+          sed -i "s|__IMAGE_TAG__|${{ github.sha }}|g" k3s/user/user-deployment.yaml
 
       - name: Decode kubeconfig
         run: echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > $KUBECONFIG

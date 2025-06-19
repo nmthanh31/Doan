@@ -52,7 +52,7 @@ spec:
     spec:
       containers:
         - name: product-service
-          image: nmthanh31/product-service:latest
+          image: nmthanh31/product-service:__IMAGE_TAG__
           imagePullPolicy: Always 
           ports:
             - containerPort: 3002
