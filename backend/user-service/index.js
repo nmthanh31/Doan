@@ -5,11 +5,11 @@ const session = require("express-session");
 const cors = require("cors");
 const userRoutes = require("./routes/user.routes");
 const cookieParser = require("cookie-parser");
-app.use(cookieParser());
+
 
 const app = express();
 
-
+app.use(cookieParser());
 app.use(express.json());
 // Thêm dòng này để chấp nhận proxy từ Nginx
 app.set("trust proxy", 1);
