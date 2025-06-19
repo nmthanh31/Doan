@@ -78,7 +78,7 @@ const SignUpPage = () => {
               htmlFor="email"
               className="block text-sm font-medium text-white"
             >
-              Địa chỉ email
+              Email
             </label>
             <input
               id="email"

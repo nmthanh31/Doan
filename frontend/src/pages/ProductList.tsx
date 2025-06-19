@@ -106,23 +106,24 @@ const ProductList: React.FC = () => {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 py-10">
-        {products.map((product) => (
-          <CardProduct
-            key={product.id}
-            title={product.name}
-            price={product.price}
-            image={handleLoadImage(product.image_url)}
-            rating={product.rating}
-            onAddToCart={() => {
-              if (userId) {
-                handleAddToCart(userId, product.id, product.price.toString());
-              } else {
-                setMessage("Không tìm thấy người dùng!");
-                setMessageType("error");
-              }
-            }}
-          />
-        ))}
+        {Array.isArray(products) &&
+          products.map((product) => (
+            <CardProduct
+              key={product.id}
+              title={product.name}
+              price={product.price}
+              image={handleLoadImage(product.image_url)}
+              rating={product.rating}
+              onAddToCart={() => {
+                if (userId) {
+                  handleAddToCart(userId, product.id, product.price.toString());
+                } else {
+                  setMessage("Không tìm thấy người dùng!");
+                  setMessageType("error");
+                }
+              }}
+            />
+          ))}
       </div>
     </div>
   );

@@ -46,7 +46,7 @@ const OrderPage: React.FC = () => {
           "/api/products/"
         );
 
-        console.log(response.data);
+
 
         setProducts(response.data);
       } catch (error) {
@@ -100,7 +100,6 @@ const OrderPage: React.FC = () => {
     });
 
     if (response.data.message == "delete") {
-      console.log(response.data.id);
       setItemsInCart((prevItems) =>
         prevItems.filter((item) => item.id !== response.data.id)
       );
@@ -124,7 +123,6 @@ const OrderPage: React.FC = () => {
       );
 
       const payUrl = res.data.data.payUrl;
-      console.log("Payment URL:", payUrl);
 
       window.location.href = payUrl;
     } catch (error) {
