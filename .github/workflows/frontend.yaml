@@ -48,7 +48,7 @@ jobs:
         run: |
           IMAGE=${{ secrets.DOCKER_USERNAME }}/frontend:${{ github.sha }}
           docker build --no-cache -t $IMAGE ./frontend
-          trivy image --skip-db-update --severity CRITICAL,HIGH --exit-code 1 --ignore-unfixed $IMAGE
+          trivy image --severity CRITICAL,HIGH --exit-code 1 --ignore-unfixed $IMAGE
           docker push $IMAGE
 
       - name: Inject image tag into Kubernetes YAML

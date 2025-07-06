@@ -48,7 +48,7 @@ jobs:
         run: |
           IMAGE=${{ secrets.DOCKER_USERNAME }}/product-service:${{ github.sha }}
           docker build -t $IMAGE ./backend/product-service
-          trivy image --skip-db-update --severity CRITICAL,HIGH --exit-code 0 --ignore-unfixed $IMAGE
+          trivy image --severity CRITICAL,HIGH --exit-code 0 --ignore-unfixed $IMAGE
           docker push $IMAGE
 
       - name: Inject image tag
