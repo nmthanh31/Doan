@@ -57,7 +57,7 @@ const LoginPage = () => {
       <div className="bg-gray-900 rounded-lg shadow-lg p-8 w-full max-w-md">
         <div className="flex flex-col items-center">
           <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-white">
-            Đăng nhập tài khoản
+            Đăng nhập
           </h2>
         </div>
 
