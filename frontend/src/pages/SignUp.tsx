@@ -190,12 +190,12 @@ const SignUpPage = () => {
         </form>
 
         <p className="mt-6 text-center text-sm text-white">
-          Already have an account?
+          Bạn đã có tài khoản?
           <Link
             to="/login"
             className="ml-1 font-semibold text-indigo-400 hover:text-indigo-300"
           >
-            Log in here!
+            Đăng nhập tại đây!
           </Link>
         </p>
       </div>
