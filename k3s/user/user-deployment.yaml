@@ -2,9 +2,9 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: nfs-sc # Đặt một tên dễ hiểu
-provisioner: kubernetes.io/no-provisioner # Chỉ ra cấp phát tĩnh
-volumeBindingMode: WaitForFirstConsumer # Quan trọng trong một số trường hợp
+  name: nfs-sc 
+provisioner: kubernetes.io/no-provisioner 
+volumeBindingMode: WaitForFirstConsumer 
 reclaimPolicy: Retain
 ---
 apiVersion: v1
@@ -15,7 +15,7 @@ spec:
   capacity:
     storage: 1Gi
   accessModes:
-    - ReadWriteMany # NFS hỗ trợ ReadWriteMany
+    - ReadWriteMany 
   nfs:
     server: 192.168.182.130
     path: /data/user-service
@@ -58,7 +58,7 @@ spec:
             - containerPort: 3001
           volumeMounts:
             - name: user-data-volume
-              mountPath: /app/data # Đường dẫn trong container bạn dùng để đọc ghi CSV
+              mountPath: /app/data 
       volumes:
         - name: user-data-volume
           persistentVolumeClaim:
@@ -74,4 +74,4 @@ spec:
   ports:
     - port: 3001
       targetPort: 3001
-  type: LoadBalancer # Nếu bạn muốn expose ra ngoài, có thể dùng LoadBalancer hoặc NodePort
+  type: LoadBalancer #
