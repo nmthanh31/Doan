@@ -15,5 +15,5 @@ COPY . .
 
 EXPOSE 3004
 
-# Lệnh khởi chạy app
+
 CMD ["node", "index.js"]

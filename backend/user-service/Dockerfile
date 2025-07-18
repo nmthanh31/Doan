@@ -19,5 +19,4 @@ COPY . .
 # Mở port mà service sẽ lắng nghe (ví dụ 3001)
 EXPOSE 3001
 
-# Lệnh để khởi động service Node.js (file chính của bạn là index.js)
 CMD ["node", "index.js"]
